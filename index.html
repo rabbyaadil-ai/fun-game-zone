@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Game Zone</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, #ffd6ec, transparent 35%),
+        radial-gradient(circle at bottom right, #d9d2ff, transparent 35%),
+        linear-gradient(135deg, #fff5fb, #f3efff);
+    color: #3d3150;
+    padding: 30px 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+header h1 {
+    font-size: 38px;
+    color: #8d5bb8;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #806d8e;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 22px;
+}
+
+.game-card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 25px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(130, 95, 160, 0.15);
+    transition: 0.3s;
+}
+
+.game-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 35px rgba(130, 95, 160, 0.22);
+}
+
+.game-card .emoji {
+    font-size: 45px;
+    margin-bottom: 12px;
+}
+
+.game-card h2 {
+    color: #76519a;
+    margin-bottom: 10px;
+}
+
+.game-card p {
+    color: #887992;
+    font-size: 14px;
+    min-height: 40px;
+    margin-bottom: 18px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+}
+
+.start-btn,
+.option-btn,
+.home-btn,
+.restart-btn {
+    background: linear-gradient(135deg, #c58bea, #ee9fc9);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.25s;
+}
+
+.start-btn:hover,
+.option-btn:hover,
+.home-btn:hover,
+.restart-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 18px rgba(180, 115, 205, 0.25);
+}
+
+.game-screen {
+    display: none;
+    max-width: 850px;
+    margin: auto;
+    background: rgba(255,255,255,0.9);
+    border-radius: 30px;
+    padding: 35px;
+    box-shadow: 0 15px 40px rgba(130, 95, 160, 0.18);
+}
+
+.game-screen.active {
+    display: block;
+}
+
+.game-title {
+    text-align: center;
+    color: #8054a5;
+    margin-bottom: 12px;
+    font-size: 30px;
+}
+
+.progress {
+    text-align: center;
+    color: #9a82aa;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.question {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.options {
+    display: grid;
+    gap: 13px;
+}
+
+.option-btn {
+    width: 100%;
+    background: #f7edff;
+    color: #654b78;
+    border: 2px solid #ead8f5;
+}
+
+.option-btn:hover {
+    background: linear-gradient(135deg, #d7a8f0, #f0b4d4);
+    color: white;
+}
+
+.result {
+    text-align: center;
+    padding: 20px;
+}
+
+.result h2 {
+    color: #895bb0;
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.result p {
+    color: #776780;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.home-btn {
+    display: block;
+    margin: 30px auto 0;
+}
+
+.intro-box {
+    background: #faf3ff;
+    border: 2px solid #ead9f5;
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 25px;
+    line-height: 1.7;
+    color: #63536e;
+}
+
+.intro-box h3 {
+    color: #8555a7;
+    margin-bottom: 10px;
+}
+
+.suspects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+    margin: 20px 0 25px;
+}
+
+.suspect {
+    background: white;
+    border: 2px solid #eadcf3;
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.suspect h4 {
+    color: #80549d;
+    margin-bottom: 7px;
+}
+
+.suspect p {
+    font-size: 13px;
+    color: #76677e;
+    line-height: 1.5;
+}
+
+.clues {
+    background: #fff8fc;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 25px;
+}
+
+.clues h3 {
+    color: #9a5f91;
+    margin-bottom: 10px;
+}
+
+.clues ul {
+    padding-left: 20px;
+    color: #6e6076;
+    line-height: 1.8;
+}
+
+.case-start {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.money-display {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #8b59a9;
+    margin-bottom: 20px;
+}
+
+.odd-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.odd-btn {
+    background: #f8efff;
+    border: 2px solid #e7d5f2;
+    border-radius: 20px;
+    font-size: 45px;
+    width: 90px;
+    height: 90px;
+    transition: 0.2s;
+}
+
+.odd-btn:hover {
+    transform: scale(1.08);
+    background: #efdfff;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 30px;
+    }
+
+    .game-screen {
+        padding: 22px;
+    }
+
+    .question {
+        font-size: 19px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎀 Fun Game Zone 🎀</h1>
+    <p>Pick a game and have some fun!</p>
+</header>
+
+<div class="container">
+
+<div id="home" class="games-grid">
+
+    <div class="game-card">
+        <div class="emoji">🧠</div>
+        <h2>Personality Type</h2>
+        <p>Discover what kind of person you are!</p>
+        <button class="start-btn" onclick="openGame('personality')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">🌎</div>
+        <h2>General Trivia</h2>
+        <p>How much random knowledge do you have?</p>
+        <button class="start-btn" onclick="openGame('trivia')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">🤪</div>
+        <h2>Chaos Meter</h2>
+        <p>Find out how chaotic you really are!</p>
+        <button class="start-btn" onclick="openGame('chaos')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">✨</div>
+        <h2>Which Character?</h2>
+        <p>Which fictional personality matches you?</p>
+        <button class="start-btn" onclick="openGame('character')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">🧩</div>
+        <h2>Brain Puzzle</h2>
+        <p>Test your logic and quick thinking.</p>
+        <button class="start-btn" onclick="openGame('brain')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">🕵️</div>
+        <h2>Mystery Case</h2>
+        <p>Investigate the case and find the culprit.</p>
+        <button class="start-btn" onclick="openGame('mystery')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">🔐</div>
+        <h2>Escape Room</h2>
+        <p>Solve the clues before you're trapped!</p>
+        <button class="start-btn" onclick="openGame('escape')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">💰</div>
+        <h2>Spend $1,000,000</h2>
+        <p>You have one million dollars. Spend it wisely!</p>
+        <button class="start-btn" onclick="openGame('money')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">🌸</div>
+        <h2>Build Your Dream Life</h2>
+        <p>Create your perfect imaginary life.</p>
+        <button class="start-btn" onclick="openGame('dream')">Play</button>
+    </div>
+
+    <div class="game-card">
+        <div class="emoji">👀</div>
+        <h2>Spot the Odd One Out</h2>
+        <p>Can your eyes catch the tiny difference?</p>
+        <button class="start-btn" onclick="openGame('odd')">Play</button>
+    </div>
+
+</div>
+
+
+<!-- PERSONALITY -->
+
+<div id="personality" class="game-screen">
+    <h2 class="game-title">🧠 Personality Type</h2>
+    <div id="personalityContent"></div>
+</div>
+
+
+<!-- TRIVIA -->
+
+<div id="trivia" class="game-screen">
+    <h2 class="game-title">🌎 General Trivia</h2>
+    <div id="triviaContent"></div>
+</div>
+
+
+<!-- CHAOS -->
+
+<div id="chaos" class="game-screen">
+    <h2 class="game-title">🤪 Chaos Meter</h2>
+    <div id="chaosContent"></div>
+</div>
+
+
+<!-- CHARACTER -->
+
+<div id="character" class="game-screen">
+    <h2 class="game-title">✨ Which Character?</h2>
+    <div id="characterContent"></div>
+</div>
+
+
+<!-- BRAIN -->
+
+<div id="brain" class="game-screen">
+    <h2 class="game-title">🧩 Brain Puzzle</h2>
+    <div id="brainContent"></div>
+</div>
+
+
+<!-- MYSTERY -->
+
+<div id="mystery" class="game-screen">
+    <h2 class="game-title">🕵️ The Missing Necklace</h2>
+    <div id="mysteryContent"></div>
+</div>
+
+
+<!-- ESCAPE -->
+
+<div id="escape" class="game-screen">
+    <h2 class="game-title">🔐 Escape Room</h2>
+    <div id="escapeContent"></div>
+</div>
+
+
+<!-- MONEY -->
+
+<div id="money" class="game-screen">
+    <h2 class="game-title">💰 Spend $1,000,000</h2>
+    <div id="moneyContent"></div>
+</div>
+
+
+<!-- DREAM -->
+
+<div id="dream" class="game-screen">
+    <h2 class="game-title">🌸 Build Your Dream Life</h2>
+    <div id="dreamContent"></div>
+</div>
+
+
+<!-- ODD -->
+
+<div id="odd" class="game-screen">
+    <h2 class="game-title">👀 Spot the Odd One Out</h2>
+    <div id="oddContent"></div>
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   GENERAL
+========================= */
+
+function openGame(id) {
+    document.getElementById("home").style.display = "none";
+
+    document.querySelectorAll(".game-screen").forEach(function(screen) {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    resetGame(id);
+}
+
+function goHome() {
+    document.querySelectorAll(".game-screen").forEach(function(screen) {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById("home").style.display = "grid";
+}
+
+
+/* =========================
+   PERSONALITY
+========================= */
+
+const personalityQuestions = [
+    {
+        question: "Your perfect weekend?",
+        options: ["Staying home and relaxing 🛋️", "Going out with friends 🎉", "Going somewhere new ✈️", "Learning something interesting 📚"]
+    },
+    {
+        question: "Someone suddenly calls you. You...",
+        options: ["Answer immediately 📞", "Get excited 😭", "Wonder why they called 🤨", "Let it ring and text later 😌"]
+    },
+    {
+        question: "Pick a vibe:",
+        options: ["Cozy ☕", "Chaotic 🤪", "Adventurous 🌍", "Calm 🌿"]
+    },
+    {
+        question: "Your biggest strength?",
+        options: ["Patience", "Confidence", "Curiosity", "Intelligence"]
+    },
+    {
+        question: "At a party you are...",
+        options: ["In a corner 😭", "Talking to everyone", "Trying something fun", "Observing everyone"]
+    },
+    {
+        question: "Choose a trip:",
+        options: ["Beach 🏖️", "Big city 🌃", "Mountains 🏔️", "Historical place 🏛️"]
+    },
+    {
+        question: "When something goes wrong...",
+        options: ["Stay calm", "Panic for 5 minutes", "Find another way", "Analyze the problem"]
+    },
+    {
+        question: "Pick a hobby:",
+        options: ["Reading 📖", "Dancing 💃", "Travelling ✈️", "Solving puzzles 🧩"]
+    },
+    {
+        question: "Your friends describe you as...",
+        options: ["Chill", "Funny", "Brave", "Smart"]
+    },
+    {
+        question: "Choose one:",
+        options: ["Peace ✨", "Fun 🎀", "Adventure 🌎", "Knowledge 🧠"]
+    }
+];
+
+let pIndex = 0;
+let pScore = 0;
+
+function showPersonalityQuestion() {
+    if (pIndex >= personalityQuestions.length) {
+        let result;
+
+        if (pScore <= 10) {
+            result = "The Chill One 🌿";
+        } else if (pScore <= 20) {
+            result = "Social Butterfly 🦋";
+        } else if (pScore <= 30) {
+            result = "Explorer ✈️";
+        } else {
+            result = "Thinker 🧠";
+        }
+
+        document.getElementById("personalityContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>Your answers reveal a really interesting personality! 🎀</p>' +
+            '<button class="restart-btn" onclick="openGame(\'personality\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = personalityQuestions[pIndex];
+
+    document.getElementById("personalityContent").innerHTML =
+        '<div class="progress">Question ' + (pIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerPersonality(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerPersonality(answer) {
+    pScore += answer + 1;
+    pIndex++;
+    showPersonalityQuestion();
+}
+
+
+/* =========================
+   TRIVIA
+========================= */
+
+const triviaQuestions = [
+    {
+        question: "What is the capital of France?",
+        options: ["Paris", "London", "Rome", "Madrid"],
+        answer: 0
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Venus", "Mars", "Jupiter", "Mercury"],
+        answer: 1
+    },
+    {
+        question: "How many continents are there?",
+        options: ["5", "6", "7", "8"],
+        answer: 2
+    },
+    {
+        question: "What is the largest ocean?",
+        options: ["Atlantic", "Indian", "Pacific", "Arctic"],
+        answer: 2
+    },
+    {
+        question: "Which animal is known as the King of the Jungle?",
+        options: ["Tiger", "Lion", "Elephant", "Bear"],
+        answer: 1
+    },
+    {
+        question: "How many days are in a leap year?",
+        options: ["364", "365", "366", "367"],
+        answer: 2
+    },
+    {
+        question: "What gas do humans need to breathe?",
+        options: ["Oxygen", "Helium", "Carbon dioxide", "Hydrogen"],
+        answer: 0
+    },
+    {
+        question: "Which is the fastest land animal?",
+        options: ["Horse", "Cheetah", "Lion", "Leopard"],
+        answer: 1
+    },
+    {
+        question: "How many sides does a hexagon have?",
+        options: ["5", "6", "7", "8"],
+        answer: 1
+    },
+    {
+        question: "Which is the largest planet?",
+        options: ["Earth", "Mars", "Saturn", "Jupiter"],
+        answer: 3
+    }
+];
+
+let tIndex = 0;
+let tScore = 0;
+
+function showTriviaQuestion() {
+    if (tIndex >= triviaQuestions.length) {
+        let result;
+
+        if (tScore >= 9) {
+            result = "Trivia Master 🏆";
+        } else if (tScore >= 7) {
+            result = "Knowledge Pro 🧠";
+        } else if (tScore >= 5) {
+            result = "Pretty Smart ✨";
+        } else if (tScore >= 3) {
+            result = "Quiz Rookie 🌸";
+        } else {
+            result = "Chaos Mode 🤪";
+        }
+
+        document.getElementById("triviaContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>You got ' + tScore + ' out of 10 correct!</p>' +
+            '<button class="restart-btn" onclick="openGame(\'trivia\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = triviaQuestions[tIndex];
+
+    document.getElementById("triviaContent").innerHTML =
+        '<div class="progress">Question ' + (tIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerTrivia(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerTrivia(answer) {
+    if (answer === triviaQuestions[tIndex].answer) {
+        tScore++;
+    }
+
+    tIndex++;
+    showTriviaQuestion();
+}
+
+
+/* =========================
+   CHAOS
+========================= */
+
+const chaosQuestions = [
+    {
+        question: "Your alarm rings. You...",
+        options: ["Get up immediately", "Snooze once", "Snooze 10 times", "Forget you even set it"]
+    },
+    {
+        question: "Your room is messy. You...",
+        options: ["Clean it", "Ignore it", "Make it messier", "Call it decoration"]
+    },
+    {
+        question: "You accidentally send a message to the wrong person...",
+        options: ["Apologize", "Panic", "Delete everything", "Pretend it was intentional"]
+    },
+    {
+        question: "Your friend says 'I have an idea'...",
+        options: ["Listen", "Get excited", "Become suspicious", "Run"]
+    },
+    {
+        question: "Pick a midnight activity:",
+        options: ["Sleep", "Watch videos", "Randomly reorganize things", "Start a completely new project"]
+    },
+    {
+        question: "You lose your phone for 2 minutes...",
+        options: ["Stay calm", "Search everywhere", "Blame everyone", "Question your entire life"]
+    },
+    {
+        question: "Your plans get cancelled...",
+        options: ["Relax", "Make new plans", "Celebrate", "Create absolute chaos"]
+    },
+    {
+        question: "Someone says 'don't touch that'...",
+        options: ["Okay", "Maybe touch it", "Definitely touch it", "Already touched it"]
+    },
+    {
+        question: "Your brain at 2 AM:",
+        options: ["Sleeping", "Thinking", "Overthinking", "Creating 47 new scenarios"]
+    },
+    {
+        question: "Choose your energy:",
+        options: ["Peaceful", "Silly", "Chaotic", "Absolutely unhinged"]
+    }
+];
+
+let cIndex = 0;
+let cScore = 0;
+
+function showChaosQuestion() {
+    if (cIndex >= chaosQuestions.length) {
+        let result;
+
+        if (cScore <= 14) {
+            result = "The Calm One 🌿";
+        } else if (cScore <= 21) {
+            result = "Silly Chaos 😭";
+        } else if (cScore <= 29) {
+            result = "Chaos Magnet 🤪";
+        } else {
+            result = "Professional Chaotic 💀";
+        }
+
+        document.getElementById("chaosContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>Your chaos level is officially ' + cScore + '/40. 😂</p>' +
+            '<button class="restart-btn" onclick="openGame(\'chaos\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = chaosQuestions[cIndex];
+
+    document.getElementById("chaosContent").innerHTML =
+        '<div class="progress">Question ' + (cIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerChaos(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerChaos(answer) {
+    cScore += answer + 1;
+    cIndex++;
+    showChaosQuestion();
+}
+
+
+/* =========================
+   CHARACTER
+========================= */
+
+const characterQuestions = [
+    {
+        question: "In a group, you naturally become...",
+        options: ["The leader", "The mysterious one", "The emotional one", "The chaotic one"]
+    },
+    {
+        question: "Your superpower would be...",
+        options: ["Leadership", "Mind reading", "Healing", "Teleportation"]
+    },
+    {
+        question: "Pick a weapon:",
+        options: ["Sword ⚔️", "Magic wand ✨", "Shield 🛡️", "Anything random"]
+    },
+    {
+        question: "Your biggest weakness?",
+        options: ["Being too responsible", "Trusting nobody", "Caring too much", "Impulsiveness"]
+    },
+    {
+        question: "Choose a setting:",
+        options: ["Castle", "Dark library", "Cute cottage", "Crazy city"]
+    },
+    {
+        question: "Your friends need help. You...",
+        options: ["Take charge", "Make a plan secretly", "Comfort them", "Make everything more fun"]
+    },
+    {
+        question: "Pick a quote vibe:",
+        options: ["Be fearless", "Trust your instincts", "Stay kind", "YOLO"]
+    },
+    {
+        question: "Choose a companion:",
+        options: ["Dragon", "Cat", "Fairy", "Talking frog"]
+    },
+    {
+        question: "Your story would be...",
+        options: ["Epic", "Mysterious", "Heartwarming", "Absolutely ridiculous"]
+    },
+    {
+        question: "Choose your ending:",
+        options: ["Hero wins", "Mystery remains", "Everyone is happy", "Plot twist!"]
+    }
+];
+
+let chIndex = 0;
+let chScore = 0;
+
+function showCharacterQuestion() {
+    if (chIndex >= characterQuestions.length) {
+        let result;
+
+        if (chScore <= 12) {
+            result = "The Leader 👑";
+        } else if (chScore <= 20) {
+            result = "The Mysterious Mind 🌙";
+        } else if (chScore <= 28) {
+            result = "The Heart ❤️";
+        } else {
+            result = "The Wild Card 🎭";
+        }
+
+        document.getElementById("characterContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>You definitely have main-character energy! ✨</p>' +
+            '<button class="restart-btn" onclick="openGame(\'character\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = characterQuestions[chIndex];
+
+    document.getElementById("characterContent").innerHTML =
+        '<div class="progress">Question ' + (chIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerCharacter(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerCharacter(answer) {
+    chScore += answer + 1;
+    chIndex++;
+    showCharacterQuestion();
+}
+
+
+/* =========================
+   BRAIN PUZZLE
+========================= */
+
+const brainQuestions = [
+    {
+        question: "What comes next? 2, 4, 6, 8, ?",
+        options: ["9", "10", "11", "12"],
+        answer: 1
+    },
+    {
+        question: "If you have 3 apples and take away 2, how many do you have?",
+        options: ["1", "2", "3", "0"],
+        answer: 1
+    },
+    {
+        question: "Which word doesn't belong?",
+        options: ["Apple", "Banana", "Carrot", "Mango"],
+        answer: 2
+    },
+    {
+        question: "What is half of 100?",
+        options: ["25", "40", "50", "60"],
+        answer: 2
+    },
+    {
+        question: "What comes next? 1, 1, 2, 3, 5, ?",
+        options: ["6", "7", "8", "9"],
+        answer: 2
+    },
+    {
+        question: "A clock shows 3:00. What angle is between the hands?",
+        options: ["45°", "90°", "120°", "180°"],
+        answer: 1
+    },
+    {
+        question: "Which number is missing? 5, 10, 15, ?, 25",
+        options: ["18", "20", "21", "22"],
+        answer: 1
+    },
+    {
+        question: "If today is Monday, what day is it after 3 days?",
+        options: ["Tuesday", "Wednesday", "Thursday", "Friday"],
+        answer: 2
+    },
+    {
+        question: "Which shape has no corners?",
+        options: ["Triangle", "Square", "Circle", "Rectangle"],
+        answer: 2
+    },
+    {
+        question: "What is 9 × 9?",
+        options: ["72", "81", "91", "99"],
+        answer: 1
+    }
+];
+
+let bIndex = 0;
+let bScore = 0;
+
+function showBrainQuestion() {
+    if (bIndex >= brainQuestions.length) {
+        let result;
+
+        if (bScore >= 9) {
+            result = "Puzzle Master 🏆";
+        } else if (bScore >= 7) {
+            result = "Quick Thinker ⚡";
+        } else if (bScore >= 5) {
+            result = "Sharp Enough 🧠";
+        } else if (bScore >= 3) {
+            result = "Tricked You 😭";
+        } else {
+            result = "Brain Buffering... 💀";
+        }
+
+        document.getElementById("brainContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>You solved ' + bScore + ' out of 10 correctly!</p>' +
+            '<button class="restart-btn" onclick="openGame(\'brain\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = brainQuestions[bIndex];
+
+    document.getElementById("brainContent").innerHTML =
+        '<div class="progress">Question ' + (bIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerBrain(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerBrain(answer) {
+    if (answer === brainQuestions[bIndex].answer) {
+        bScore++;
+    }
+
+    bIndex++;
+    showBrainQuestion();
+}
+
+
+/* =================================================
+   MYSTERY CASE
+================================================= */
+
+const mysteryQuestions = [
+    {
+        question: "At what time was the necklace last seen?",
+        options: ["6:00 PM", "7:30 PM", "8:15 PM", "9:00 PM"],
+        answer: 1
+    },
+    {
+        question: "Where was the necklace kept?",
+        options: ["Bedroom drawer", "Kitchen cabinet", "Locked glass display cabinet", "Living room table"],
+        answer: 2
+    },
+    {
+        question: "Who claimed they were making tea around 7:30 PM?",
+        options: ["Noah", "Mia", "Ethan", "Sophie"],
+        answer: 0
+    },
+    {
+        question: "Where did Mia say she was?",
+        options: ["In the kitchen", "Upstairs doing homework", "In the garden", "In the living room"],
+        answer: 1
+    },
+    {
+        question: "What was Ethan doing according to his statement?",
+        options: ["Making tea", "Sleeping", "Making a phone call outside", "Watching TV"],
+        answer: 2
+    },
+    {
+        question: "What did Sophie say she was doing?",
+        options: ["In the dining room", "In the kitchen", "Upstairs", "Outside"],
+        answer: 0
+    },
+    {
+        question: "What strange clue was found near the display cabinet?",
+        options: ["A tea stain", "A muddy shoe", "A broken phone", "A red scarf"],
+        answer: 0
+    },
+    {
+        question: "What did the hallway camera show?",
+        options: [
+            "Nobody entered the hallway",
+            "Mia entered the hallway",
+            "Someone entered the hallway at 7:34 PM",
+            "Ethan took the necklace"
+        ],
+        answer: 2
+    },
+    {
+        question: "What suspicious item was found in Noah's bag?",
+        options: ["The necklace", "A matching velvet pouch", "The cabinet", "A camera"],
+        answer: 1
+    },
+    {
+        question: "Who is the strongest suspect after connecting all the clues?",
+        options: ["Mia", "Ethan", "Sophie", "Noah"],
+        answer: 3
+    }
+];
+
+let mIndex = 0;
+let mScore = 0;
+
+function showMysteryIntro() {
+
+    document.getElementById("mysteryContent").innerHTML = `
+        <div class="intro-box">
+            <h3>📁 CASE FILE #047 — The Missing Necklace</h3>
+
+            <p>
+                It was a quiet Saturday evening at the Wilson family house.
+                Earlier that evening, a valuable diamond necklace had been
+                placed inside a locked glass display cabinet in the living room.
+            </p>
+
+            <p>
+                At exactly <b>7:30 PM</b>, the necklace was still there.
+                A short time later, someone discovered that it had disappeared.
+            </p>
+
+            <p>
+                There were <b>four people inside the house</b> that evening.
+                There was no sign of forced entry, and both the front and back
+                doors were locked.
+            </p>
+
+            <p>
+                So the thief was probably already inside the house.
+            </p>
+        </div>
+
+        <div class="intro-box">
+            <h3>👥 THE FOUR SUSPECTS</h3>
+
+            <div class="suspects">
+
+                <div class="suspect">
+                    <h4>🧑 Noah</h4>
+                    <p>
+                        A family friend who knew the house well.
+                        He said he was in the kitchen making tea around 7:30 PM.
+                    </p>
+                </div>
+
+                <div class="suspect">
+                    <h4>👩 Mia</h4>
+                    <p>
+                        The owner's daughter.
+                        She said she was upstairs doing homework.
+                    </p>
+                </div>
+
+                <div class="suspect">
+                    <h4>🧑 Ethan</h4>
+                    <p>
+                        The owner's brother.
+                        He said he was outside making a phone call.
+                    </p>
+                </div>
+
+                <div class="suspect">
+                    <h4>👩 Sophie</h4>
+                    <p>
+                        A family friend visiting that evening.
+                        She said she stayed in the dining room.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="clues">
+            <h3>🔎 WHAT INVESTIGATORS KNOW</h3>
+
+            <ul>
+                <li>The necklace was last seen at <b>7:30 PM.</b></li>
+                <li>The glass cabinet showed no sign of being forced open.</li>
+                <li>A spare key to the cabinet was hidden somewhere inside the house.</li>
+                <li>A strange tea stain was found near the display cabinet.</li>
+                <li>The hallway security camera recorded movement at <b>7:34 PM.</b></li>
+                <li>Each suspect gave a different account of what they were doing.</li>
+            </ul>
+        </div>
+
+        <div class="intro-box">
+            <h3>🕵️ YOUR MISSION</h3>
+
+            <p>
+                You are the detective assigned to this case.
+                Read the case carefully and remember the details.
+            </p>
+
+            <p>
+                You will be given <b>10 questions</b>.
+                Some answers are hidden directly inside the case,
+                while others require you to connect different clues.
+            </p>
+
+            <p>
+                At the end, you will find out how good your investigation was
+                and who the evidence points to.
+            </p>
+        </div>
+
+        <div class="case-start">
+            <button class="start-btn" onclick="startMystery()">
+                🔍 Start Investigation
+            </button>
+        </div>
+    `;
+}
+
+function startMystery() {
+    mIndex = 0;
+    mScore = 0;
+    showMysteryQuestion();
+}
+
+function showMysteryQuestion() {
+
+    if (mIndex >= mysteryQuestions.length) {
+
+        let result;
+
+        if (mScore >= 9) {
+            result = "🕵️ Master Detective";
+        } else if (mScore >= 7) {
+            result = "🔎 Excellent Investigator";
+        } else if (mScore >= 5) {
+            result = "🧩 Good Detective";
+        } else if (mScore >= 3) {
+            result = "👀 Amateur Detective";
+        } else {
+            result = "😭 The Mystery Got You";
+        }
+
+        document.getElementById("mysteryContent").innerHTML = `
+            <div class="result">
+
+                <h2>${result}</h2>
+
+                <p>
+                    You got <b>${mScore} / 10</b> questions correct.
+                </p>
+
+                <div class="intro-box">
+                    <h3>🚨 CASE SOLVED</h3>
+
+                    <p>
+                        The person the evidence points to is
+                        <b>NOAH.</b>
+                    </p>
+
+                    <p>
+                        Noah claimed that he was making tea in the kitchen
+                        around 7:30 PM. However, the evidence places him much
+                        closer to the crime scene.
+                    </p>
+
+                    <p>
+                        The tea stain near the display cabinet supports the
+                        idea that someone who had been making tea was near
+                        the cabinet.
+                    </p>
+
+                    <p>
+                        The hallway camera then recorded someone entering the
+                        hallway at 7:34 PM. Noah's timeline becomes suspicious
+                        when this evidence is compared with his statement.
+                    </p>
+
+                    <p>
+                        Investigators also found a <b>matching velvet pouch</b>
+                        in Noah's bag, and Noah knew the house well enough to
+                        know about the spare cabinet key.
+                    </p>
+
+                    <p>
+                        None of the clues alone proves everything, but when
+                        the timeline, camera footage, cabinet access and pouch
+                        are considered together, <b>Noah is the strongest suspect.</b>
+                    </p>
+                </div>
+
+                <button class="restart-btn" onclick="openGame('mystery')">
+                    Investigate Again
+                </button>
+
+                <button class="home-btn" onclick="goHome()">
+                    Back to Games
+                </button>
+
+            </div>
+        `;
+
+        return;
+    }
+
+    const q = mysteryQuestions[mIndex];
+
+    document.getElementById("mysteryContent").innerHTML = `
+        <div class="progress">
+            Question ${mIndex + 1} / 10
+        </div>
+
+        <div class="question">
+            ${q.question}
+        </div>
+
+        <div class="options">
+            ${q.options.map(function(option, i) {
+                return `
+                    <button class="option-btn" onclick="answerMystery(${i})">
+                        ${option}
+                    </button>
+                `;
+            }).join("")}
+        </div>
+    `;
+}
+
+function answerMystery(answer) {
+
+    if (answer === mysteryQuestions[mIndex].answer) {
+        mScore++;
+    }
+
+    mIndex++;
+    showMysteryQuestion();
+}
+
+
+/* =========================
+   ESCAPE ROOM
+========================= */
+
+const escapeQuestions = [
+    {
+        question: "You find a locked box. A note says: 2 + 2 = ?",
+        options: ["3", "4", "5", "6"],
+        answer: 1
+    },
+    {
+        question: "A door has a symbol of a moon. Which key do you choose?",
+        options: ["Sun", "Moon", "Star", "Cloud"],
+        answer: 1
+    },
+    {
+        question: "A clock shows 7. What number should you enter?",
+        options: ["5", "6", "7", "8"],
+        answer: 2
+    },
+    {
+        question: "You find three keys. The smallest one opens a...",
+        options: ["Window", "Drawer", "Tiny box", "Door"],
+        answer: 2
+    },
+    {
+        question: "A note says: 'The answer is between 3 and 5.'",
+        options: ["2", "3", "4", "6"],
+        answer: 2
+    },
+    {
+        question: "A keypad shows 2, 4, 7, 9. What is the code?",
+        options: ["2479", "2794", "4297", "9742"],
+        answer: 0
+    },
+    {
+        question: "A red button says DON'T PRESS.",
+        options: ["Press it", "Definitely press it", "Ignore it", "Press twice"],
+        answer: 2
+    },
+    {
+        question: "A hidden message says 'LOOK UNDER THE TABLE.'",
+        options: ["Look there", "Ignore it", "Run", "Sleep"],
+        answer: 0
+    },
+    {
+        question: "You find the final key under a book.",
+        options: ["Take it", "Leave it", "Hide it", "Throw it"],
+        answer: 0
+    },
+    {
+        question: "The exit door finally opens. You...",
+        options: ["Escape! 🏃", "Stay inside", "Lock it again", "Take a nap"],
+        answer: 0
+    }
+];
+
+let eIndex = 0;
+let eScore = 0;
+
+function showEscapeQuestion() {
+
+    if (eIndex >= escapeQuestions.length) {
+
+        let result;
+
+        if (eScore >= 9) {
+            result = "Escape Master 🏆";
+        } else if (eScore >= 7) {
+            result = "Clever Escaper 🔐";
+        } else if (eScore >= 5) {
+            result = "Clue Finder 🧩";
+        } else if (eScore >= 3) {
+            result = "Locked In 😭";
+        } else {
+            result = "Still Trapped 💀";
+        }
+
+        document.getElementById("escapeContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>You solved ' + eScore + ' out of 10 clues!</p>' +
+            '<button class="restart-btn" onclick="openGame(\'escape\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = escapeQuestions[eIndex];
+
+    document.getElementById("escapeContent").innerHTML =
+        '<div class="progress">Question ' + (eIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerEscape(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerEscape(answer) {
+    if (answer === escapeQuestions[eIndex].answer) {
+        eScore++;
+    }
+
+    eIndex++;
+    showEscapeQuestion();
+}
+
+
+/* =========================
+   MILLION DOLLARS
+========================= */
+
+const moneyQuestions = [
+    {
+        question: "What is your first purchase?",
+        options: ["Luxury car 🚗", "Dream house 🏡", "Private jet ✈️", "Investments 📈"]
+    },
+    {
+        question: "Your next purchase?",
+        options: ["Designer clothes 👗", "Island 🏝️", "Business 🏢", "Books 📚"]
+    },
+    {
+        question: "Choose a vacation:",
+        options: ["Paris 🇫🇷", "Maldives 🏝️", "Japan 🇯🇵", "Space 🚀"]
+    },
+    {
+        question: "You want to help someone. You...",
+        options: ["Donate", "Start a charity", "Help a friend", "Build a school"]
+    },
+    {
+        question: "Your dream home is...",
+        options: ["Modern mansion", "Beach villa", "Mountain house", "Huge apartment"]
+    },
+    {
+        question: "Pick a hobby:",
+        options: ["Cars", "Travelling", "Business", "Art"]
+    },
+    {
+        question: "Your biggest luxury:",
+        options: ["Clothes", "Food", "Travel", "Technology"]
+    },
+    {
+        question: "You receive another $100,000. You...",
+        options: ["Spend it", "Save it", "Invest it", "Give it away"]
+    },
+    {
+        question: "Your millionaire lifestyle:",
+        options: ["Luxury", "Adventure", "Success", "Helping people"]
+    },
+    {
+        question: "Final choice:",
+        options: ["Buy something amazing", "Travel forever", "Build an empire", "Make the world better"]
+    }
+];
+
+let moneyIndex = 0;
+let moneyStyle = [];
+
+function showMoneyQuestion() {
+
+    if (moneyIndex >= moneyQuestions.length) {
+
+        document.getElementById("moneyContent").innerHTML =
+            '<div class="result">' +
+            '<h2>💰 Millionaire Complete!</h2>' +
+            '<p>Your millionaire choices show your unique style! ✨</p>' +
+            '<button class="restart-btn" onclick="openGame(\'money\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = moneyQuestions[moneyIndex];
+
+    document.getElementById("moneyContent").innerHTML =
+        '<div class="money-display">$1,000,000</div>' +
+        '<div class="progress">Choice ' + (moneyIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerMoney(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerMoney(answer) {
+    moneyStyle.push(answer);
+    moneyIndex++;
+    showMoneyQuestion();
+}
+
+
+/* =========================
+   DREAM LIFE
+========================= */
+
+const dreamQuestions = [
+    {
+        question: "Where would you live?",
+        options: ["Big city 🌃", "Quiet countryside 🌿", "Beach 🏖️", "Somewhere new every year ✈️"]
+    },
+    {
+        question: "Your dream job?",
+        options: ["CEO 💼", "Artist 🎨", "Traveller 🌎", "Something creative ✨"]
+    },
+    {
+        question: "Your perfect morning?",
+        options: ["Coffee and peace ☕", "Gym and productivity", "Beach walk", "Sleeping in 😭"]
+    },
+    {
+        question: "Choose your home:",
+        options: ["Mansion", "Cute cottage", "Beach house", "Modern apartment"]
+    },
+    {
+        question: "Your ideal weekend:",
+        options: ["Relaxing", "Working on goals", "Exploring", "Having fun"]
+    },
+    {
+        question: "What matters most?",
+        options: ["Peace", "Success", "Freedom", "Happiness"]
+    },
+    {
+        question: "Choose a pet:",
+        options: ["Cat 🐱", "Dog 🐶", "Bunny 🐰", "Something unusual"]
+    },
+    {
+        question: "Your dream vacation:",
+        options: ["Paris", "Maldives", "Japan", "Road trip"]
+    },
+    {
+        question: "Your future self is...",
+        options: ["Successful", "Creative", "Free", "Happy"]
+    },
+    {
+        question: "Choose one word:",
+        options: ["Peace", "Success", "Adventure", "Joy"]
+    }
+];
+
+let dIndex = 0;
+let dScore = 0;
+
+function showDreamQuestion() {
+
+    if (dIndex >= dreamQuestions.length) {
+
+        let result;
+
+        if (dScore <= 12) {
+            result = "Peaceful Dreamer 🌿";
+        } else if (dScore <= 20) {
+            result = "Ambitious Builder 💼";
+        } else if (dScore <= 28) {
+            result = "Life Explorer ✈️";
+        } else {
+            result = "Happiness Seeker 🌸";
+        }
+
+        document.getElementById("dreamContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>Your dream life sounds pretty amazing! ✨</p>' +
+            '<button class="restart-btn" onclick="openGame(\'dream\')">Build Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = dreamQuestions[dIndex];
+
+    document.getElementById("dreamContent").innerHTML =
+        '<div class="progress">Question ' + (dIndex + 1) + ' / 10</div>' +
+        '<div class="question">' + q.question + '</div>' +
+        '<div class="options">' +
+        q.options.map(function(option, i) {
+            return '<button class="option-btn" onclick="answerDream(' + i + ')">' + option + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerDream(answer) {
+    dScore += answer + 1;
+    dIndex++;
+    showDreamQuestion();
+}
+
+
+/* =========================
+   ODD ONE OUT
+========================= */
+
+const oddQuestions = [
+    [["🍎", "🍎", "🍏", "🍎"], 2],
+    [["🔷", "🔹", "🔷", "🔷"], 1],
+    [["🐱", "🐱", "😺", "🐱"], 2],
+    [["🌼", "🌸", "🌸", "🌸"], 0],
+    [["⭐", "⭐", "⭐", "✦"], 3],
+    [["🧸", "🐻", "🧸", "🧸"], 1],
+    [["🍩", "🍩", "🍪", "🍩"], 2],
+    [["🦋", "🦋", "🦋", "🌸"], 3],
+    [["👁️", "👀", "👁️", "👁️"], 1],
+    [["💀", "💀", "☠️", "💀"], 2]
+];
+
+let oddIndex = 0;
+let oddScore = 0;
+
+function showOddQuestion() {
+
+    if (oddIndex >= oddQuestions.length) {
+
+        let result;
+
+        if (oddScore >= 9) {
+            result = "Human Scanner 👀";
+        } else if (oddScore >= 7) {
+            result = "Sharp Eyes 🔥";
+        } else if (oddScore >= 5) {
+            result = "Pretty Observant ✨";
+        } else if (oddScore >= 3) {
+            result = "Almost Had It 😭";
+        } else {
+            result = "The Odd One Won 💀";
+        }
+
+        document.getElementById("oddContent").innerHTML =
+            '<div class="result">' +
+            '<h2>' + result + '</h2>' +
+            '<p>You spotted ' + oddScore + ' out of 10 odd ones!</p>' +
+            '<button class="restart-btn" onclick="openGame(\'odd\')">Play Again</button>' +
+            '<button class="home-btn" onclick="goHome()">Back to Games</button>' +
+            '</div>';
+
+        return;
+    }
+
+    let q = oddQuestions[oddIndex];
+
+    document.getElementById("oddContent").innerHTML =
+        '<div class="progress">Round ' + (oddIndex + 1) + ' / 10</div>' +
+        '<div class="question">Which one is different?</div>' +
+        '<div class="odd-options">' +
+        q[0].map(function(emoji, i) {
+            return '<button class="odd-btn" onclick="answerOdd(' + i + ')">' + emoji + '</button>';
+        }).join("") +
+        '</div>';
+}
+
+function answerOdd(answer) {
+
+    if (answer === oddQuestions[oddIndex][1]) {
+        oddScore++;
+    }
+
+    oddIndex++;
+    showOddQuestion();
+}
+
+
+/* =========================
+   RESET GAMES
+========================= */
+
+function resetGame(id) {
+
+    if (id === "personality") {
+        pIndex = 0;
+        pScore = 0;
+        showPersonalityQuestion();
+    }
+
+    if (id === "trivia") {
+        tIndex = 0;
+        tScore = 0;
+        showTriviaQuestion();
+    }
+
+    if (id === "chaos") {
+        cIndex = 0;
+        cScore = 0;
+        showChaosQuestion();
+    }
+
+    if (id === "character") {
+        chIndex = 0;
+        chScore = 0;
+        showCharacterQuestion();
+    }
+
+    if (id === "brain") {
+        bIndex = 0;
+        bScore = 0;
+        showBrainQuestion();
+    }
+
+    if (id === "mystery") {
+        mIndex = 0;
+        mScore = 0;
+        showMysteryIntro();
+    }
+
+    if (id === "escape") {
+        eIndex = 0;
+        eScore = 0;
+        showEscapeQuestion();
+    }
+
+    if (id === "money") {
+        moneyIndex = 0;
+        moneyStyle = [];
+        showMoneyQuestion();
+    }
+
+    if (id === "dream") {
+        dIndex = 0;
+        dScore = 0;
+        showDreamQuestion();
+    }
+
+    if (id === "odd") {
+        oddIndex = 0;
+        oddScore = 0;
+        showOddQuestion();
+    }
+}
+
+</script>
+
+</body>
+</html>
